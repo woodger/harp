@@ -4,7 +4,7 @@
 
 `Harp` is a small and fast solution for loading modules and DOM manipulation.
 
-This source code implemented by following the [ECMAScript® 2018 Language Specification
+Source code implemented by following the [ECMAScript® 2018 Language Specification
 ](https://www.ecma-international.org/ecma-262/9.0/index.html) Standard.
 
 ## Getting Started
@@ -20,10 +20,10 @@ npm i git+https://git@github.com/woodger/harp.git
 #### Table of Contents
 
 * [window.require](#windowrequirepath)
-* [window.require.cache](#windowrequirepathcache)
+* [window.require.cache](#windowrequirecache)
 
 * [class Harp](#class-harp)
-  * [constructor: new Harp(selector | node)](#class-new-harpselector-node)
+  * [constructor: new Harp(selector | node)](#constructor-new-harpselector--node)
   * [harp.on(event, callback[, bubble])](#harponevent-callback-bubble)
   * [harp.off(event, callback[, bubble])](#harpoffevent-callback-bubble)
   * [harp.have(name, callback)](#harphavename-callback)
@@ -80,12 +80,12 @@ async function () {
 
 #### harp.on(event, callback[, bubble])
 
-- `event` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> A case-sensitive string representing the [event type](https://developer.mozilla.org/en-US/docs/Web/Events) to listen for, such as 'click' or 'keyup'.
+- `event` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> a case-sensitive string representing the [event type](https://developer.mozilla.org/en-US/docs/Web/Events) to listen for, such as 'click' or 'keyup'.
 - `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> a function to execute when the event is triggered.
   - `bubble` <[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)> indicating that events of this type will be dispatched to the registered listener before being dispatched to any `EventTarget` beneath it in the DOM tree. **Default:** `false`.
 - returns: `this`
 
-Attach an event handler function for one or more events to the selected elements.
+For example attach an event handler function for one or more events to the selected elements.
 
 ```js
 async function () {
@@ -109,7 +109,7 @@ The method removes from the `EventTarget` an event listener previously registere
 
 #### harp.have(name, callback)
 
-- `name` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> A case-sensitive string representing the [event type](https://developer.mozilla.org/en-US/docs/Web/Events) determine whether any of the matched elements are assigned the given property.
+- `name` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> A case-sensitive string representing the determine whether any of the matched elements are assigned the given property.
 - `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> result executing a function for each matched element.
 - returns: `this`
 
@@ -186,7 +186,7 @@ elem.make({
 
 #### harp.nodeList
 
-- <[NodeList](https://developer.mozilla.org/en-US/docs/Web/API/NodeList) | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)> objects are collections of nodes, usually returned by properties such as Node.childNodes and methods such as document.querySelectorAll().
+- <[NodeList](https://developer.mozilla.org/en-US/docs/Web/API/NodeList) | [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)> objects are collections of nodes, usually returned by properties such as [Node.childNodes](https://developer.mozilla.org/en-US/docs/Web/API/Node/childNodes) and methods such as [document.querySelectorAll()](https://developer.mozilla.org/en-US/docs/Web/API/Document/querySelectorAll).
 
 #### harp.length
 
