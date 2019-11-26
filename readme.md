@@ -27,9 +27,9 @@ npm i git+https://git@github.com/woodger/harp.git
   * [harp.on(type, callback[, bubble])](#harpontype-callback-bubble)
   * [harp.off(type, callback[, bubble])](#harpofftype-callback-bubble)
   * [harp.forEach(callback)](#harpforeachcallback)
+  * [harp.find(target[, selector])](harpfindtarget-selector)
   * [harp.have(name[, callback])](#harphavename-callback)
   * [harp.make(table)](#harpmaketable)
-  * [harp.find(target[, callback])](harpfindtarget-callback)
   * [harp.nodeList](#harpnodelist)
   * [harp.length](#harplength)
 
@@ -120,6 +120,41 @@ The method is designed to make DOM looping constructs concise and less error-pro
 elements.forEach((node, index) => {
   console.log(node.nodeName);
 });
+```
+
+#### harp.find(target[, selector])
+
+- `target` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> find property any of:
+  * firstChild
+  * firstElementChild
+  * lastChild
+  * lastElementChild
+  * childNodes
+  * children
+  * parentNode
+  * parentElement
+  * previousSibling
+  * previousElementSibling
+  * nextSibling
+  * nextElementSibling
+
+> NOTE target `childNodes` and `children` selector not support
+
+- `selector` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> a string containing a selector like CSS expression to match elements against.
+- returns: <[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)> are collections of nodes.
+
+Search for the nearest node in document.
+
+```js
+const [parent] = elem.find('parentNode');
+console.log(parent.nodeName);
+```
+
+Below for example recursive search parent node by CSS selector.
+
+```js
+const [action] = elem.find('parentNode', '.action');
+console.log(parent.nodeName);
 ```
 
 #### harp.have(name[, callback])
@@ -213,26 +248,6 @@ elem.make({
   - `append` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)>
   - `after` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)>
 - returns: `this`
-
-#### harp.find(target[, selector])
-
-- `target` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> find property any of `'firstChild'`, `'firstElementChild'`, `'lastChild'`, `'lastElementChild'`, `'childNodes'`, `'children'`, `'parentNode'`, `'parentElement'`, `'previousSibling'`, `'previousElementSibling'`, `'nextSibling'`, `'nextElementSibling'`.
-- `selector` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> a string containing a selector like CSS expression to match elements against.
-- returns: <[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)>.
-
-Search for the nearest node in document.
-
-```js
-const [parent] = elem.find('parentNode');
-console.log(parent.nodeName);
-```
-
-Below for example recursive search parent node by CSS selector.
-
-```js
-const [action] = elem.find('parentNode', '.action');
-console.log(parent.nodeName);
-```
 
 #### harp.nodeList
 
