@@ -163,6 +163,20 @@
 
       return this;
     }
+
+    deep(path, callback) {
+      for (let i of this.nodeList) {
+        let index = 0;
+
+        while ((i = i[path])) {
+          if (callback(i, ++index) === false) {
+            return this;
+          }
+        }
+      }
+
+      return this;
+    }
   }
 
 	const require = async (path) => {

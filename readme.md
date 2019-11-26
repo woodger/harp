@@ -28,6 +28,7 @@ npm i git+https://git@github.com/woodger/harp.git
   * [harp.off(event, callback[, bubble])](#harpoffevent-callback-bubble)
   * [harp.have(name, callback)](#harphavename-callback)
   * [harp.make(options)](#harpmakeoptions)
+  * [harp.deep(target, callback)](#harpdeeptarget-callback)
   * [harp.nodeList](#harpnodelist)
   * [harp.length](#harplength)
 
@@ -183,6 +184,25 @@ elem.make({
   - `append` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)>
   - `after` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)>
 - returns: `this`
+
+#### harp.deep(path, callback)
+
+- `path` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> find property any of `'firstChild'`, `'firstElementChild'`, `'lastChild'`, `'lastElementChild'`, `'childNodes'`, `'children'`, `'parentNode'`, `'parentElement'`, `'previousSibling'`, `'previousElementSibling'`, `'nextSibling'`, `'nextElementSibling'`.
+
+- `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> result executing a function for each matched element.
+- returns: `this`
+
+Below for example recursive search parent node by CSS selector.
+
+```js
+const parents = [];
+
+elem.deep('parentNode', (node, index) => {
+  if (node.matches('.foo')) {
+    parents.push(node);
+  }
+});
+```
 
 #### harp.nodeList
 
