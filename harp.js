@@ -147,7 +147,7 @@
     }
 
     have(name, callback) {
-      const buffer = new Array(this.length);
+      const buffer = [];
       const match = ShadowNode.prototype.hasOwnProperty(name);
 
       for (let node of this.nodeList) {
@@ -165,7 +165,7 @@
 		}
 
     find(target, selector) {
-      const buffer = new Array(this.length);
+      const buffer = [];
 
       for (let i of this.nodeList) {
         while ((i = i[target])) {
