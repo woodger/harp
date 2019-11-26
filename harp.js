@@ -102,51 +102,33 @@
       return this.nodeList.length;
     }
 
+  	on(type, callback, bubble = false) {
+      return this.forEach((node, index) => {
+        node.addEventListener(type, (event) => {
+          callback(node, event, index);
+        },
+        bubble);
+      });
+  	}
+
+  	off(type, callback, bubble = false) {
+      return this.forEach((node, index) => {
+        node.removeEventListener(type, (event) => {
+          callback(node, event, index);
+        },
+        bubble);
+      });
+  	}
+
     forEach(callback) {
       for (let i = 0; i < this.nodeList.length; i++) {
-        const node = this.nodeList[i];
-
-        if (callback(node, i) === false) {
-          break;
-        }
+        callback(this.nodeList[i], i);
       }
-
-      return this;
     }
 
-  	on(event, callback, bubble = false) {
-      return this.forEach((node) => {
-        node.addEventListener(event, function(args) {
-          callback(this, args);
-        },
-        bubble);
-      });
-  	}
-
-  	off(event, callback, bubble = false) {
-      return this.forEach((node) => {
-        node.removeEventListener(event, function(args) {
-          callback(this, args);
-        },
-        bubble);
-      });
-  	}
-
-    have(name, callback) {
-			const available = ShadowNode.prototype.hasOwnProperty(name);
-
-      return this.forEach((node) => {
-        if (available) {
-          node = new ShadowNode(node);
-        }
-
-        return callback(node, node[name]);
-      });
-		}
-
-    make(args) {
-      for (let i in args) {
-        if (args.hasOwnProperty(i) === false) {
+    make(table) {
+      for (let i in table) {
+        if (table.hasOwnProperty(i) === false) {
           continue;
         }
 
@@ -157,25 +139,45 @@
             node = new ShadowNode(node);
           }
 
-          node[i] = args[i];
+          node[i] = table[i];
         });
       }
 
       return this;
     }
 
-    deep(path, callback) {
-      for (let i of this.nodeList) {
-        let index = 0;
+    have(name, callback) {
+      const buffer = new Array(this.length);
+      const match = ShadowNode.prototype.hasOwnProperty(name);
 
-        while ((i = i[path])) {
-          if (callback(i, ++index) === false) {
-            return this;
+      for (let node of this.nodeList) {
+        if (match) {
+          node = new ShadowNode(node);
+        }
+
+        let value = callback === undefined ?
+          node[name] : callback(node, node[name]);
+
+        buffer.push(value);
+      }
+
+      return buffer;
+		}
+
+    find(target, selector) {
+      const buffer = new Array(this.length);
+
+      for (let i of this.nodeList) {
+        while ((i = i[target])) {
+          if (selector === undefined || (i.matches !== undefined && i.matches(selector))) {
+            buffer.push(i);
+
+            continue;
           }
         }
       }
 
-      return this;
+      return buffer;
     }
   }
 

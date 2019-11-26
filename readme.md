@@ -24,12 +24,12 @@ npm i git+https://git@github.com/woodger/harp.git
 
 * [class Harp](#class-harp)
   * [constructor: new Harp(selector | node)](#constructor-new-harpselector--node)
-  * [harp.on(event, callback[, bubble])](#harponevent-callback-bubble)
-  * [harp.off(event, callback[, bubble])](#harpoffevent-callback-bubble)
+  * [harp.on(type, callback[, bubble])](#harpontype-callback-bubble)
+  * [harp.off(type, callback[, bubble])](#harpofftype-callback-bubble)
   * [harp.forEach(callback)](#harpforeachcallback)
-  * [harp.have(name, callback)](#harphavename-callback)
-  * [harp.make(options)](#harpmakeoptions)
-  * [harp.deep(path, callback)](harpdeeppath-callback)
+  * [harp.have(name[, callback])](#harphavename-callback)
+  * [harp.make(table)](#harpmaketable)
+  * [harp.find(target[, callback])](harpfindtarget-callback)
   * [harp.nodeList](#harpnodelist)
   * [harp.length](#harplength)
 
@@ -45,7 +45,7 @@ Below `index.js` uses the counter module, which imports the Counter class:
 **scripts/index.js**
 
 ```js
-async function () {
+async () => {
   const Counter = await require('./counter.js');
 }
 ```
@@ -67,24 +67,22 @@ Modules are cached after the first time they are uploaded.
 
 #### class Harp
 
-The class implementation is based on the `builder` design-pattern.
-
 #### constructor: new Harp(selector | node)
 
 - `selector` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> a string containing a selector like CSS expression to match elements against.
 - `node` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)> any type of DOM interface [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element), [Text](https://developer.mozilla.org/en-US/docs/Web/API/Text), [Comment](https://developer.mozilla.org/en-US/docs/Web/API/Comment).
 
 ```js
-async function () {
+async () => {
   const Harp = await require('harp');
 
   const h1 = new Harp('h1');
 }
 ```
 
-#### harp.on(event, callback[, bubble])
+#### harp.on(type, callback[, bubble])
 
-- `event` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> a case-sensitive string representing the [event type](https://developer.mozilla.org/en-US/docs/Web/Events) to listen for, such as 'click' or 'keyup'.
+- `type` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> a case-sensitive string representing the [event type](https://developer.mozilla.org/en-US/docs/Web/Events) to listen for, such as 'click' or 'keyup'.
 - `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> a function to execute when the event is triggered.
   - `bubble` <[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)> indicating that events of this type will be dispatched to the registered listener before being dispatched to any `EventTarget` beneath it in the DOM tree. **Default:** `false`.
 - returns: `this`.
@@ -92,7 +90,7 @@ async function () {
 For example attach an event handler function for one or more events to the selected elements.
 
 ```js
-async function () {
+async () => {
   const Harp = await require('harp');
 
   const buttons = new Harp('button');
@@ -102,9 +100,9 @@ async function () {
 }
 ```
 
-#### harp.off(event, callback[, bubble])
+#### harp.off(type, callback[, bubble])
 
-- `event` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> A case-sensitive string representing the [event type](https://developer.mozilla.org/en-US/docs/Web/Events) to listen for, such as 'click' or 'keyup'.
+- `type` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> A case-sensitive string representing the [event type](https://developer.mozilla.org/en-US/docs/Web/Events) to listen for, such as 'click' or 'keyup'.
 - `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> a function to execute when the event is triggered.
   - `bubble` <[Boolean](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Boolean)> indicating that events of this type will be dispatched to the registered listener before being dispatched to any `EventTarget` beneath it in the DOM tree. **Default:** `false`.
 - returns: `this`.
@@ -114,7 +112,7 @@ The method removes from the `EventTarget` an event listener previously registere
 #### harp.forEach(callback)
 
 - `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> result executing a function for each matched element.
-- returns: `this`.
+- returns: `undefined`.
 
 The method is designed to make DOM looping constructs concise and less error-prone. When called it iterates over the [NodeList](https://developer.mozilla.org/en-US/docs/Web/API/NodeList) or [Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array).
 
@@ -124,28 +122,41 @@ elements.forEach((node, index) => {
 });
 ```
 
-Return `false` of `callback` if you want to break the search.
-
-#### harp.have(name, callback)
+#### harp.have(name[, callback])
 
 - `name` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> A case-sensitive string representing the determine whether any of the matched elements are assigned the given property.
 - `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> result executing a function for each matched element.
-- returns: `this`.
+- returns: <[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)>.
 
 ```js
-async function () {
+async () => {
   const Harp = await require('harp');
 
   const buttons = new Harp('button');
-  buttons.have('class', (value, node) => {
-    console.log(value); // DOMTokenList ["foo", value: "foo"]
-  });
+  const [tag] = buttons.have('tag');
+
+  console.log(tag);
 }
 ```
 
-#### harp.make(options)
+The return values may be the result of a `callback` function call.
 
-- `options` <[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>
+```js
+async () => {
+  const Harp = await require('harp');
+
+  const buttons = new Harp('button');
+  const [key] = buttons.have('data', (node, value) => {
+    return value.key;
+  });
+
+  console.log(key);
+}
+```
+
+#### harp.make(table)
+
+- `table` <[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>
   - `class` <[Object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)>
 
 Below will add an `action` class for the element and remove the `hide` class.
@@ -203,26 +214,25 @@ elem.make({
   - `after` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)>
 - returns: `this`
 
-#### harp.deep(path, callback)
+#### harp.find(target[, selector])
 
-- `path` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> find property any of `'firstChild'`, `'firstElementChild'`, `'lastChild'`, `'lastElementChild'`, `'childNodes'`, `'children'`, `'parentNode'`, `'parentElement'`, `'previousSibling'`, `'previousElementSibling'`, `'nextSibling'`, `'nextElementSibling'`.
+- `target` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> find property any of `'firstChild'`, `'firstElementChild'`, `'lastChild'`, `'lastElementChild'`, `'childNodes'`, `'children'`, `'parentNode'`, `'parentElement'`, `'previousSibling'`, `'previousElementSibling'`, `'nextSibling'`, `'nextElementSibling'`.
+- `selector` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)> a string containing a selector like CSS expression to match elements against.
+- returns: <[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)>.
 
-- `callback` <[Function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function)> result executing a function for each matched element.
-- returns: `this`.
+Search for the nearest node in document.
+
+```js
+const [parent] = elem.find('parentNode');
+console.log(parent.nodeName);
+```
 
 Below for example recursive search parent node by CSS selector.
 
 ```js
-const parents = [];
-
-elem.deep('parentNode', (node, index) => {
-  if (node.matches('.foo')) {
-    parents.push(node);
-  }
-});
+const [action] = elem.find('parentNode', '.action');
+console.log(parent.nodeName);
 ```
-
-Return `false` of `callback` if you want to interrupt the search.
 
 #### harp.nodeList
 
