@@ -116,13 +116,19 @@
 
   	on(event, callback, bubble = false) {
       return this.forEach((node) => {
-        node.addEventListener(event, callback, bubble);
+        node.addEventListener(event, function(args) {
+          callback(this, args);
+        },
+        bubble);
       });
   	}
 
   	off(event, callback, bubble = false) {
       return this.forEach((node) => {
-        node.removeEventListener(event, callback, bubble);
+        node.removeEventListener(event, function(args) {
+          callback(this, args);
+        },
+        bubble);
       });
   	}
 
@@ -134,9 +140,7 @@
           node = new ShadowNode(node);
         }
 
-        const value = node[name];
-
-        return callback(value, node);
+        return callback(node, node[name]);
       });
 		}
 
