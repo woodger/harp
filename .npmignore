@@ -1,8 +1,8 @@
 coverage
-test
+gulpfile.js
 node_modules
 package-lock.json
-appveyor.yml
+test
 .nyc_output
 .travis.yml
 .gitignore
