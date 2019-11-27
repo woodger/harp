@@ -196,12 +196,14 @@
         'json' : 'text';
       let content = await res[type]();
 
-      require.cache[path] = module = {
+      const module = {
         exports: {}
       };
 
       const invoke = new Function('module', content);
       await invoke(module);
+
+      require.cache[path] = module.exports;
     }
 
     return require.cache[path];
