@@ -27,6 +27,7 @@ npm i git+https://git@github.com/woodger/harp.git
   * [harp.on(type, callback[, bubble])](#harpontype-callback-bubble)
   * [harp.off(type, callback[, bubble])](#harpofftype-callback-bubble)
   * [harp.forEach(callback)](#harpforeachcallback)
+  * [harp.item([index])](#harpitemindex)
   * [harp.find(target[, selector])](harpfindtarget-selector)
   * [harp.have(name[, callback])](#harphavename-callback)
   * [harp.make(table)](#harpmaketable)
@@ -121,6 +122,12 @@ elements.forEach((node, index) => {
   console.log(node.nodeName);
 });
 ```
+
+#### harp.item([index])
+
+- `index` <[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)> **Default:** `0`.
+
+Returns a node from a [harp.nodeList](#harpnodelist) by index.
 
 #### harp.find(target[, selector])
 

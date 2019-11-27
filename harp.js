@@ -8,18 +8,18 @@
       return this.node.classList;
     }
 
-		set class(args) {
-			for (let i in args) {
-				if (args.hasOwnProperty(i) === false) {
+		set class(table) {
+			for (let i in table) {
+				if (table.hasOwnProperty(i) === false) {
           continue;
 				}
 
-        if (args[i]) {
+        if (table[i]) {
           this.node.classList.add(i);
+          continue;
         }
-        else {
-          this.node.classList.remove(i);
-        }
+
+        this.node.classList.remove(i);
 			}
 		}
 
@@ -27,13 +27,13 @@
       return this.node.dataset;
     }
 
-		set data(args) {
-			for (let i in args) {
-        if (args.hasOwnProperty(i) === false) {
+		set data(table) {
+			for (let i in table) {
+        if (table.hasOwnProperty(i) === false) {
           continue;
 				}
 
-				this.node.dataset[i] = args[i];
+				this.node.dataset[i] = table[i];
 			}
 		}
 
@@ -41,13 +41,13 @@
 			return window.getComputedStyle(this.node);
 		}
 
-		set style(args) {
-			for (let i in args) {
-        if (args.hasOwnProperty(i) === false) {
+		set style(table) {
+			for (let i in table) {
+        if (table.hasOwnProperty(i) === false) {
           continue;
 				}
 
-				this.node.style.setProperty(i, args[i]);
+				this.node.style.setProperty(i, table[i]);
 			}
 		}
 
@@ -55,40 +55,40 @@
 			return this.node.tagName.toLowerCase();
 		}
 
-		set tag(args) {
-			this.node.tagName = args.toUpperCase();
+		set tag(name) {
+			this.node.tagName = name.toUpperCase();
 		}
 
     get text() {
       return this.node.textContent;
     }
 
-		set text(args) {
-			this.node.textContent = args;
+		set text(content) {
+			this.node.textContent = content;
 		}
 
     get html() {
 			return this.node.innerHTML;
 		}
 
-		set html(args) {
-			this.node.innerHTML = args;
+		set html(content) {
+			this.node.innerHTML = content;
 		}
 
-		set before(args) {
-			this.node.parentNode.insertBefore(args, this.node);
+		set before(node) {
+      this.node.parentNode.insertBefore(node, this.node);
 		}
 
-		set prepend(args) {
-			this.node.insertBefore(args, this.node.firstChild);
+		set prepend(node) {
+			this.node.insertBefore(node, this.node.firstChild);
 		}
 
-		set append(args) {
-			this.node.appendChild(args);
+		set append(node) {
+			this.node.appendChild(node);
 		}
 
-		set after(args) {
-			this.node.parentNode.insertBefore(args, this.node.nextSibling);
+		set after(node) {
+			this.node.parentNode.insertBefore(node, this.node.nextSibling);
 		}
 	}
 
@@ -119,6 +119,10 @@
         bubble);
       });
   	}
+
+    item(index = 0) {
+      return this.nodeList[index];
+    }
 
     forEach(callback) {
       for (let i = 0; i < this.nodeList.length; i++) {
@@ -171,7 +175,6 @@
         while ((i = i[target])) {
           if (selector === undefined || (i.matches !== undefined && i.matches(selector))) {
             buffer.push(i);
-
             continue;
           }
         }
