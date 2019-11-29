@@ -173,7 +173,7 @@
 
       for (let i of this.nodeList) {
         while ((i = i[target])) {
-          if (selector === undefined || (i.matches !== undefined && i.matches(selector))) {
+          if (i !== null && (selector === undefined || (i.matches !== undefined && i.matches(selector)))) {
             buffer.push(i);
             continue;
           }
