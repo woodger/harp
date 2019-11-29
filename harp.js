@@ -1,4 +1,18 @@
 (() => {
+  ((e) => {
+    if ((e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || e.oMatchesSelector) === false) {
+      e.matches = function (selector) {
+        for (let i of document.querySelectorAll(selector)) {
+          if (i === this) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+    }
+  })(Element.prototype);
+
   class ShadowNode {
 		constructor(node) {
 			this.node = node;
@@ -173,7 +187,7 @@
 
       for (let i of this.nodeList) {
         while ((i = i[target])) {
-          if (i && (selector === undefined || (matches in i && i.matches(selector)))) {
+          if (i && (selector === undefined || (i.matches !== undefined && i.matches(selector)))) {
             buffer.push(i);
             continue;
           }
