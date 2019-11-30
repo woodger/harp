@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/npm/l/express.svg)](https://github.com/woodger/harp/blob/master/LICENSE)
 
-`Harp` is a small and fast solution for loading modules and DOM manipulation.
+`Harp` is a small and fast solution for DOM manipulation.
 
 Source code implemented by following the [ECMAScript® 2018 Language Specification
 ](https://www.ecma-international.org/ecma-262/9.0/index.html) Standard.
@@ -19,9 +19,6 @@ npm i git+https://git@github.com/woodger/harp.git
 
 #### Table of Contents
 
-* [window.require](#windowrequirepath)
-* [window.require.cache](#windowrequirecache)
-
 * [class Harp](#class-harp)
   * [constructor: new Harp(selector | node)](#constructor-new-harpselector--node)
   * [harp.on(type, callback[, bubble])](#harpontype-callback-bubble)
@@ -34,38 +31,6 @@ npm i git+https://git@github.com/woodger/harp.git
   * [harp.nodeList](#harpnodelist)
   * [harp.length](#harplength)
 
-#### window.require(path)
-
-`Harp` provides modular asynchronous scripting capabilities using <[async function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/async_function)>
-This method takes a different approach to script loading than traditional <[script](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script)> tags.
-
-Contents each modules will is wrapped in a `new Function()` constructor with the `module` parameter. The result of the function call is cached by listing a simple object in the [window.require.cache](#windowrequirepathcache) field.
-
-Below `index.js` uses the counter module, which imports the Counter class:
-
-**scripts/index.js**
-
-```js
-async () => {
-  const Counter = await require('./counter.js');
-}
-```
-
-The counter module is defined in `counter.js`:
-
-**scripts/counter.js**
-
-```js
-module.exports = class Counter {};
-```
-
-The module.exports property can be assigned a new value (such as a function or object).
-In addition to JavaScript models `.js` data import is supported `.json` extension.
-
-#### window.require.cache
-
-Modules are cached after the first time they are uploaded.
-
 #### class Harp
 
 #### constructor: new Harp(selector | node)
@@ -74,11 +39,9 @@ Modules are cached after the first time they are uploaded.
 - `node` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)> any type of DOM interface [Element](https://developer.mozilla.org/en-US/docs/Web/API/Element), [Text](https://developer.mozilla.org/en-US/docs/Web/API/Text), [Comment](https://developer.mozilla.org/en-US/docs/Web/API/Comment).
 
 ```js
-async () => {
-  const Harp = await require('harp');
-
-  const h1 = new Harp('h1');
-}
+require('/node_modules/harp/harp.js', function(Harp) {
+  var h1 = new Harp('h1');
+});
 ```
 
 #### harp.on(type, callback[, bubble])
@@ -91,14 +54,13 @@ async () => {
 For example attach an event handler function for one or more events to the selected elements.
 
 ```js
-async () => {
-  const Harp = await require('harp');
+require('/node_modules/harp/harp.js', function(Harp) {
+  var elem = new Harp('button');
 
-  const buttons = new Harp('button');
-  buttons.on('click', (node) => {
-    console.log('Target "click"');
+  elem.on('click', (node, event) => {
+    console.log('Target ' + event.target);
   });
-}
+});
 ```
 
 #### harp.off(type, callback[, bubble])
@@ -153,14 +115,14 @@ Returns a node from a [harp.nodeList](#harpnodelist) by index.
 Search for the nearest node in document.
 
 ```js
-const [parent] = elem.find('parentNode');
+var [parent] = elem.find('parentNode');
 console.log(parent.nodeName);
 ```
 
 Below for example recursive search parent node by CSS selector.
 
 ```js
-const [action] = elem.find('parentNode', '.action');
+var [action] = elem.find('parentNode', '.action');
 console.log(parent.nodeName);
 ```
 
@@ -171,29 +133,25 @@ console.log(parent.nodeName);
 - returns: <[Array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)>.
 
 ```js
-async () => {
-  const Harp = await require('harp');
-
-  const buttons = new Harp('button');
-  const [tag] = buttons.have('tag');
+require('/node_modules/harp/harp.js', function(Harp) {
+  var button = new Harp('button');
+  var [tag] = button.have('tag');
 
   console.log(tag);
-}
+});
 ```
 
 The return values may be the result of a `callback` function call.
 
 ```js
-async () => {
-  const Harp = await require('harp');
-
-  const buttons = new Harp('button');
-  const [key] = buttons.have('data', (node, value) => {
+require('/node_modules/harp/harp.js', function(Harp) {
+  var button = new Harp('button');
+  var [key] = buttons.have('data', (node, value) => {
     return value.key;
   });
 
   console.log(key);
-}
+});
 ```
 
 #### harp.make(table)
