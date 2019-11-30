@@ -1,6 +1,7 @@
 # Harp
 
 [![License](https://img.shields.io/npm/l/express.svg)](https://github.com/woodger/harp/blob/master/LICENSE)
+[![Known Vulnerabilities](https://snyk.io/test/github/woodger/harp/badge.svg?targetFile=package.json)](https://snyk.io/test/github/woodger/harp?targetFile=package.json)
 
 `Harp` is a small and fast solution for DOM manipulation.
 
@@ -196,16 +197,6 @@ elem.make({
 
 When setting must a object contains a list of styles properties for that element with values assigned like [CSSStyleDeclaration](https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration) for the attributes that are defined in the element's inline `style` attribute.
 
-  - `tag` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)>
-
-Assigns an element HTML tag
-
-```js
-elem.make({
-  tag: 'h1'
-});
-```
-
   - `text` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)>
   - `html` <[String](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)>
   - `before` <[Node](https://developer.mozilla.org/en-US/docs/Web/API/Node)>
@@ -221,3 +212,14 @@ elem.make({
 #### harp.length
 
 - <[Number](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number)> property returns the number of items in a [harp.nodeList](#harpnodelist).
+
+#### Browser compatibility
+
+| Desktop           | Version |
+|-------------------|:-------:|
+| Chrome            | 7       |
+| Edge              | 12      |
+| Firefox           | 6       |
+| Internet Explorer | 11      |
+| Opera             | 11.5    |
+| Safari            | 5       |

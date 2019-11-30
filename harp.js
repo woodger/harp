@@ -1,200 +1,220 @@
-((e) => {
-  if ((e.matches || e.matchesSelector || e.webkitMatchesSelector || e.mozMatchesSelector || e.msMatchesSelector || e.oMatchesSelector) === false) {
-    e.matches = function (selector) {
-      for (let i of document.querySelectorAll(selector)) {
-        if (i === this) {
+(function(proto) {
+  if ((proto.matches || proto.matchesSelector || proto.webkitMatchesSelector || proto.mozMatchesSelector || proto.msMatchesSelector || proto.oMatchesSelector) === false) {
+    proto.matches = function(selector) {
+      var nodeList = document.querySelectorAll(selector);
+
+      for (var i = 0; i < nodeList.length; i++) {
+        if (nodeList[i] === this) {
           return true;
         }
       }
 
       return false;
-    }
+    };
   }
 })(Element.prototype);
 
-class ShadowNode {
-  constructor(node) {
-    this.node = node;
-  }
+var ShadowNode = function(node) {
+  this.node = node;
+};
 
-  get class() {
-    return this.node.classList;
-  }
+Object.defineProperties(ShadowNode.prototype, {
+  class: {
+    get: function() {
+      return this.node.classList;
+    },
+    set: function(table) {
+      var iterable = Object.keys(table);
 
-  set class(table) {
-    for (let i in table) {
-      if (table.hasOwnProperty(i) === false) {
-        continue;
-      }
+      for (var i = 0; i < iterable.length; i++) {
+        var name = iterable[i];
 
-      if (table[i]) {
-        this.node.classList.add(i);
-        continue;
-      }
-
-      this.node.classList.remove(i);
-    }
-  }
-
-  get data() {
-    return this.node.dataset;
-  }
-
-  set data(table) {
-    for (let i in table) {
-      if (table.hasOwnProperty(i) === false) {
-        continue;
-      }
-
-      this.node.dataset[i] = table[i];
-    }
-  }
-
-  get style() {
-    return window.getComputedStyle(this.node);
-  }
-
-  set style(table) {
-    for (let i in table) {
-      if (table.hasOwnProperty(i) === false) {
-        continue;
-      }
-
-      this.node.style.setProperty(i, table[i]);
-    }
-  }
-
-  get tag() {
-    return this.node.tagName.toLowerCase();
-  }
-
-  set tag(name) {
-    this.node.tagName = name.toUpperCase();
-  }
-
-  get text() {
-    return this.node.textContent;
-  }
-
-  set text(content) {
-    this.node.textContent = content;
-  }
-
-  get html() {
-    return this.node.innerHTML;
-  }
-
-  set html(content) {
-    this.node.innerHTML = content;
-  }
-
-  set before(node) {
-    this.node.parentNode.insertBefore(node, this.node);
-  }
-
-  set prepend(node) {
-    this.node.insertBefore(node, this.node.firstChild);
-  }
-
-  set append(node) {
-    this.node.appendChild(node);
-  }
-
-  set after(node) {
-    this.node.parentNode.insertBefore(node, this.node.nextSibling);
-  }
-}
-
-class Harp {
-  constructor(args) {
-    this.nodeList = typeof args === 'string' ?
-      document.querySelectorAll(args) : [ args ];
-  }
-
-  get length() {
-    return this.nodeList.length;
-  }
-
-  on(type, callback, bubble = false) {
-    return this.forEach((node, index) => {
-      node.addEventListener(type, (event) => {
-        callback(node, event, index);
-      },
-      bubble);
-    });
-  }
-
-  off(type, callback, bubble = false) {
-    return this.forEach((node, index) => {
-      node.removeEventListener(type, (event) => {
-        callback(node, event, index);
-      },
-      bubble);
-    });
-  }
-
-  item(index = 0) {
-    return this.nodeList[index];
-  }
-
-  forEach(callback) {
-    for (let i = 0; i < this.nodeList.length; i++) {
-      callback(this.nodeList[i], i);
-    }
-  }
-
-  make(table) {
-    for (let i in table) {
-      if (table.hasOwnProperty(i) === false) {
-        continue;
-      }
-
-      const available = ShadowNode.prototype.hasOwnProperty(i);
-
-      this.forEach((node) => {
-        if (available) {
-          node = new ShadowNode(node);
+        if (table[name]) {
+          this.node.classList.add(name);
         }
-
-        node[i] = table[i];
-      });
+        else {
+          this.node.classList.remove(name);
+        }
+      }
     }
+  },
 
-    return this;
+  data: {
+    get: function() {
+      return this.node.dataset;
+    },
+    set: function(table) {
+      var iterable = Object.keys(table);
+
+      for (var i = 0; i < iterable.length; i++) {
+        var name = iterable[i];
+        this.node.dataset[name] = table[name];
+      }
+    }
+  },
+
+  style: {
+    get: function() {
+      return window.getComputedStyle(this.node);
+    },
+    set: function(table) {
+      var iterable = Object.keys(table);
+
+      for (var i = 0; i < iterable.length; i++) {
+        var name = iterable[i];
+        this.node.style.setProperty(name, table[name]);
+      }
+    }
+  },
+
+  text: {
+    get: function() {
+      return this.node.textContent;
+    },
+    set: function(value) {
+      this.node.textContent = value;
+    }
+  },
+
+  html: {
+    get: function() {
+      return this.node.innerHTML;
+    },
+    set: function(value) {
+      this.node.innerHTML = value;
+    }
+  },
+
+  before: {
+    set: function(node) {
+      this.node.parentNode.insertBefore(node, this.node);
+    }
+  },
+
+  prepend: {
+    set: function(node) {
+      this.node.insertBefore(node, this.node.firstChild);
+    }
+  },
+
+  append: {
+    set: function(node) {
+      this.node.appendChild(node);
+    }
+  },
+
+  after: {
+    set: function(node) {
+      this.node.parentNode.insertBefore(node, this.node.nextSibling);
+    }
+  }
+});
+
+var Harp = function(args) {
+  this.nodeList = typeof args === 'string' ?
+    document.querySelectorAll(args) : [ args ];
+};
+
+Object.defineProperties(Harp.prototype, {
+  length: {
+    get: function() {
+      return this.nodeList.length;
+    }
+  }
+});
+
+Harp.prototype.on = function(type, callback, bubble) {
+  if (bubble === undefined) {
+    bubble = false;
   }
 
-  have(name, callback) {
-    const buffer = [];
-    const match = ShadowNode.prototype.hasOwnProperty(name);
+  return this.forEach(function(node, index) {
+    node.addEventListener(
+      type,
+      callback.bind(undefined, node, event, index),
+      bubble
+    );
+  });
+};
 
-    for (let node of this.nodeList) {
-      if (match) {
+Harp.prototype.off = function(type, callback, bubble) {
+  if (bubble === undefined) {
+    bubble = false;
+  }
+
+  return this.forEach(function(node, index) {
+    node.removeEventListener(
+      type,
+      callback.bind(undefined, node, event, index),
+      bubble
+    );
+  });
+};
+
+Harp.prototype.item = function(index) {
+  if (index === undefined) {
+    index = 0;
+  }
+
+  return this.nodeList[index];
+};
+
+Harp.prototype.forEach = function(callback) {
+  for (var i = 0; i < this.nodeList.length; i++) {
+    callback(this.nodeList[i], i);
+  }
+};
+
+Harp.prototype.find = function(target, selector) {
+  var buffer = [];
+
+  this.forEach(function(node) {
+    while ((node = node[target])) {
+      if (node && (selector === undefined || (node.matches !== undefined && node.matches(selector)))) {
+        buffer.push(node);
+        continue;
+      }
+    }
+  });
+
+  return buffer;
+};
+
+Harp.prototype.make = function(table) {
+  var iterable = Object.keys(table);
+
+  for (var i = 0; i < iterable.length; i++) {
+    var name = iterable[i];
+    var available = ShadowNode.prototype.hasOwnProperty(name);
+
+    this.forEach(function(node) {
+      if (available) {
         node = new ShadowNode(node);
       }
 
-      let value = callback === undefined ?
-        node[name] : callback(node, node[name]);
-
-      buffer.push(value);
-    }
-
-    return buffer;
+      node[name] = table[name];
+    });
   }
 
-  find(target, selector) {
-    const buffer = [];
+  return this;
+};
 
-    for (let i of this.nodeList) {
-      while ((i = i[target])) {
-        if (i && (selector === undefined || (i.matches !== undefined && i.matches(selector)))) {
-          buffer.push(i);
-          continue;
-        }
-      }
+Harp.prototype.have = function(name, callback) {
+  var buffer = [];
+  var match = ShadowNode.prototype.hasOwnProperty(name);
+
+  this.forEach(function(node) {
+    if (match) {
+      node = new ShadowNode(node);
     }
 
-    return buffer;
-  }
-}
+    var value = callback === undefined ?
+      node[name] : callback(node, node[name]);
+
+    buffer.push(value);
+  });
+
+  return buffer;
+};
 
 module.exports = Harp;
